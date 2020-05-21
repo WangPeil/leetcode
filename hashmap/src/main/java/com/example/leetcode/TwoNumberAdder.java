@@ -17,12 +17,15 @@ public class TwoNumberAdder {
         fl1.next = fl2;
         fl2.next = fl3;
         ListNode sl1 = new ListNode(5);
-        ListNode sl2 = new ListNode(6);
-        ListNode sl3 = new ListNode(4);
-        sl1.next = sl2;
-        sl2.next = sl3;
+//        ListNode sl2 = new ListNode(6);
+//        ListNode sl3 = new ListNode(4);
+//        sl1.next = sl2;
+//        sl2.next = sl3;
         ListNode ss = add(fl1, sl1);
-        System.out.println(ss);
+        while (ss != null) {
+            System.out.println(ss.val);
+            ss = ss.next;
+        }
     }
 
     /**
@@ -36,25 +39,28 @@ public class TwoNumberAdder {
         if (firstListNode == null && secondListNode == null) {
             throw new NullPointerException("args must not be null");
         }
-        boolean isAdd;
+        int isAdd = 0;
         ListNode fl = firstListNode;
         ListNode sl = secondListNode;
-        ListNode headListNode;
-        ListNode resultListNode;
-        int sum = getListNodeVal(fl) + getListNodeVal(sl);
-        isAdd = sum >= 10;
-        headListNode = isAdd ? new ListNode(sum - 10) : new ListNode(sum);
-        resultListNode = headListNode;
-        while (isAdd || fl.next != null || sl.next != null) {
-            // 有计算的必要性
-            fl = fl.next;
-            sl = sl.next;
-            sum = isAdd ? getListNodeVal(fl) + getListNodeVal(sl) + 1 : getListNodeVal(fl) + getListNodeVal(sl);
-            isAdd = sum >= 10;
-            headListNode.next = isAdd ? new ListNode(sum - 10) : new ListNode(sum);
-            headListNode = headListNode.next;
+        ListNode headListNode = new ListNode(-1);
+        ListNode currentListNode = new ListNode(0);
+        headListNode.next = currentListNode;
+        int sum = getListNodeVal(fl) + getListNodeVal(sl) + isAdd;
+        isAdd = sum / 10;
+        currentListNode.val = sum % 10;
+        fl = fl == null ? null : fl.next;
+        sl = sl == null ? null : sl.next;
+        while (isAdd > 0 || fl != null || sl != null) {
+            currentListNode.next = new ListNode(0);
+            currentListNode = currentListNode.next;
+            sum = getListNodeVal(fl) + getListNodeVal(sl) + isAdd;
+            isAdd = sum / 10;
+            currentListNode.val = sum % 10;
+            fl = fl == null ? null : fl.next;
+            sl = sl == null ? null : sl.next;
+            // 需不需要创建新的节点
         }
-        return resultListNode;
+        return headListNode.next;
     }
 
     static int getListNodeVal(ListNode node) {
